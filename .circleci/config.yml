@@ -5,8 +5,14 @@ jobs:
       - image: alpine:3.7
     steps:
       - checkout
+      - run: git submodule sync
+      - run: git submodule update --init
       - run:
           name: The First Step
           command: |
             echo 'Hello World!'
             echo 'This is the delivery pipeline'
+       - run:
+          name: git checking
+          command: |
+            ls -al
