@@ -25,6 +25,7 @@ jobs:
           name: generate swagger
           command: |
             echo 'geberating swagger'
+            go get -u github.com/go-swagger/go-swagger/cmd/swagger		
             cd cmd
             swagger generate spec -i ../tags.json -o ../swagger.json 
             echo 'generated'
