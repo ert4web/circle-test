@@ -18,16 +18,15 @@ jobs:
   job-2:
     working_directory: ~/circle_test
     docker:
-      - image: 'alpine:3.7'
+      - image: 'swaggerapi/swagger-converter:v1.0.2'
     steps:
       - checkout
       - run:
-          name: generate swagger
+          name: generate open api
           command: |
             echo 'generating swagger'
-            go get -u github.com/go-swagger/go-swagger/cmd/swagger		
-            cd cmd
-            go generate github.com/et4web/swagger-test/cmd 
+            curl -X POST http://localhost:9090/api/convert -d @swagger.json --header 'Content-Type: application/json' | jq > openapi.json
+
             echo 'generated'
 workflows:
   version: 2

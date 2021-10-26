@@ -1,0 +1,113 @@
+{
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "swagger": "2.0",
+  "info": {
+    "description": "This application provides a RESTful API for the Dcircle test.",
+    "title": "circle test  API",
+    "license": {
+      "name": "ERT Proprietary API"
+    },
+    "version": "1.0.0"
+  },
+  "host": "ERTAPI",
+  "paths": {
+    "/v1/user/sections/{userXID}": {
+      "get": {
+        "description": "Gets a section for a user from roster API",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "UserOperations"
+        ],
+        "operationId": "GetUserDetails",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "UserXID",
+            "description": "The resource xid for which to retrieve product data",
+            "name": "userXID",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/userDetails"
+          },
+          "400": {
+            "$ref": "#/responses/errorsResponse"
+          },
+          "401": {
+            "$ref": "#/responses/errorsResponse"
+          },
+          "500": {
+            "$ref": "#/responses/errorsResponse"
+          }
+        }
+      }
+    }
+  },
+  "responses": {
+    "GetUserResponse": {
+      "description": ""
+    },
+    "errorsResponse": {
+      "description": "APIErrorResponse Response for errors",
+      "schema": {
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "properties": {
+          "error": {
+            "description": "in: body",
+            "type": "string",
+            "x-go-name": "Err"
+          }
+        }
+      }
+    },
+    "userDetails": {
+      "description": "API Response Response for user deatils",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "age": {
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "Age"
+          },
+          "name": {
+            "type": "string",
+            "x-go-name": "Name"
+          },
+          "user_id": {
+            "type": "string",
+            "x-go-name": "UserID"
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "api_key": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "security": [
+    {
+      "api_key": []
+    }
+  ]
+}
