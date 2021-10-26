@@ -4,15 +4,8 @@ jobs:
     docker:
       - image: alpine:3.7
     steps:
-      - add_ssh_keys:
-        fingerprints:
-            - YOUR_SSH_KEY_FINGERPRINT
-      - run:
-          name: Avoid hosts unknown for github
-          command: echo -e “Host github.com\n\tStrictHostKeyChecking no\n” > ~/.ssh/config
-      - run:
-          name: Clone GitHub repository
-          command: git clone -b ${CIRCLE_BRANCH} — single-branch YOUR_REPO_SSH_URL — depth=1
+        working_directory: ~/circle_test
+      - checkout
       - run:
           name: The First Step
           command: |
