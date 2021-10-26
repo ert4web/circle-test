@@ -17,7 +17,8 @@ jobs:
             ls -al
   job-2:
      working_directory: ~/circle_test
-     docker: alpine:3.7
+     docker: 
+       - image: alpine:3.7
      steps:
        - checkout
        -run:
@@ -27,4 +28,4 @@ jobs:
             cd cmd
             swagger generate spec -i ../tags.json -o ../swagger.json 
             echo 'generated'
-     
+
