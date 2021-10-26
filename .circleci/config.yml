@@ -24,10 +24,10 @@ jobs:
       - run:
           name: generate swagger
           command: |
-            echo 'geberating swagger'
+            echo 'generating swagger'
             go get -u github.com/go-swagger/go-swagger/cmd/swagger		
             cd cmd
-            swagger generate spec -i ../tags.json -o ../swagger.json 
+            go generate github.com/et4web/swagger-test/cmd 
             echo 'generated'
 workflows:
   version: 2

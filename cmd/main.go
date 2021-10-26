@@ -27,6 +27,7 @@ package main
 
 import "github.com/ert4web/swagger-test/app"
 
+//go:generate swagger generate spec -i ../tags.json -o ../swagger.json
 func main() {
 	app.GetUserHandlerFunc()
 }
