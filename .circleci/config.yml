@@ -1,9 +1,9 @@
 version: 2.1
 jobs:
   build:
-    working_directory: ~/circle_test
+    # working_directory: ~/circle_test
     docker:
-      - image: 'alpine:3.7'
+      - image: 'cimg/go:1.17.2'
     steps:
       - checkout
       - run:
@@ -14,24 +14,27 @@ jobs:
       - run:
           name: git checking
           command: |
-            pwd
+            go get -u github.com/go-swagger/go-swagger/cmd/swagger
+            cd cmd; swagger generate spec -i ../tags.json -o swagger.json
             ls -al
   job-2:
-    working_directory: ~/circle_test
+    # working_directory: ~/circle_test
     docker:
-      - image: 'swaggerapi/swagger-converter:v1.0.2'
+      - image: 'cimg/go:1.17.2'
+    working_directory: ~/go/src/github.com/ert4web/circle-test
     steps:
       - checkout
+      - setup_remote_docker
       - run:
-          name: generate open api
+          name: Cnvert Swagger
           command: |
-            echo 'generating swagger'
-            run --rm -d -p 9090:8080 --name swagger-converter swaggerapi/swagger-converter:v1.0.2
+            docker run -it -p 8990:8080 --name swagger-converter swaggerapi/swagger-converter:v1.0.2
             sleep 5s
-            curl -X POST http://localhost:9090/api/convert -d @swagger.json --header 'Content-Type: application/json' | jq > openapi.json
-            rm -f swagger-converter
-
-            echo 'generated'
+            docker ps -a
+            curl -X POST http://localhost:8990/api/convert -d @swagger/static/swagger.json --header 'Content-Type: application/json' | jq > swagger/static/openapi.json
+            docker rm -f swagger-converter
+          
+            
 workflows:
   version: 2
   Example_Workflow:
