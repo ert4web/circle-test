@@ -25,10 +25,10 @@ jobs:
           name: generate open api
           command: |
             echo 'generating swagger'
-            docker run --rm -d -p 9090:8080 --name swagger-converter swaggerapi/swagger-converter:v1.0.2
+            run --rm -d -p 9090:8080 --name swagger-converter swaggerapi/swagger-converter:v1.0.2
             sleep 5s
             curl -X POST http://localhost:9090/api/convert -d @swagger.json --header 'Content-Type: application/json' | jq > openapi.json
-            docker rm -f swagger-converter
+            rm -f swagger-converter
 
             echo 'generated'
 workflows:
