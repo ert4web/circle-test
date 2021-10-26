@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: ~/circle_test
     docker:
-      - image: alpine:3.7
+      - image: 'alpine:3.7'
     steps:
       - checkout
       - run:
@@ -16,16 +16,23 @@ jobs:
           command: |
             ls -al
   job-2:
-     working_directory: ~/circle_test
-     docker: 
-       - image: alpine:3.7
-     steps:
-       - checkout
-       - run:
+    working_directory: ~/circle_test
+    docker:
+      - image: 'alpine:3.7'
+    steps:
+      - checkout
+      - run:
           name: generate swagger
           command: |
             echo 'geberating swagger'
             cd cmd
             swagger generate spec -i ../tags.json -o ../swagger.json 
             echo 'generated'
-
+workflows:
+  version: 2
+  Example_Workflow:
+    jobs:
+      - build
+      - job-2:
+          requires:
+            - build
