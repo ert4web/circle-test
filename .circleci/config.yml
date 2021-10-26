@@ -21,7 +21,7 @@ jobs:
        - image: alpine:3.7
      steps:
        - checkout
-       -run:
+       - run:
           name: generate swagger
           command: |
             echo 'geberating swagger'
