@@ -1,6 +1,6 @@
 version: 2.1
 jobs:
-  build:
+  job:
     # working_directory: ~/circle_test
     docker:
       - image: 'cimg/go:1.17.2'
@@ -18,7 +18,6 @@ jobs:
             cd cmd; swagger generate spec -i ../tags.json -o swagger.json
             ls -al
   job-2:
-    # working_directory: ~/circle_test
     docker:
       - image: 'cimg/go:1.17.2'
     working_directory: ~/go/src/github.com/ert4web/circle-test
@@ -33,13 +32,34 @@ jobs:
             docker ps -a
             curl -X POST http://localhost:8990/api/convert -d @swagger/static/swagger.json --header 'Content-Type: application/json' | jq > swagger/static/openapi.json
             docker rm -f swagger-converter
-          
-            
+  job-3:
+    docker:
+      - image: 'cimg/go:1.17.2'
+    working_directory: ~/go/src/github.com/ert4web/circle-test
+    steps:
+      - run: mkdir tdir
+      - run: echo "hello" > tdir/test1
+      - persist_to_workspace:
+      # must be relative or absolute path from working directory
+          root: tdir
+
+          # must be relative path from root
+          paths:
+            - "test1"
+  job-4:
+    docker:
+      - image: 'cimg/go:1.17.2'
+    working_directory: ~/go/src/github.com/ert4web/circle-test
+    steps:
+      - attach_workspace:
+          at: ~/go/src/github.com/ert4web/circle-test/tdir
+      - run: cat ~/go/src/github.com/ert4web/circle-test/tdir/test1
+      - run: pwd; ls -al
 workflows:
   version: 2
   Example_Workflow:
     jobs:
-      - build
-      - job-2:
+      - job-3
+      - job-4:
           requires:
-            - build
+            - job-3
