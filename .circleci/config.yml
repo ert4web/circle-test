@@ -1,16 +1,29 @@
 version: 2.1
 jobs:
-  job:
-    # working_directory: ~/circle_test
+  checkout-code:
     docker:
       - image: 'cimg/go:1.17.2'
+    working_directory: ~/go/src/github.com/ert4web/circle-test
     steps:
       - checkout
+      - save_cache:
+          key: ctest-repo-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+          - /go/src/github.com/ert4web/circle-test
+      - run: ls -al
+  job:
+    docker:
+      - image: 'cimg/go:1.17.2'
+    working_directory: ~/go/src/github.com/ert4web/circle-test
+    steps:
+      - restore_cache:
+          key: ctest-repo-{{ .Environment.CIRCLE_SHA1 }}
       - run:
           name: The First Step
           command: |
             echo 'Hello World!'
             echo 'This is the delivery pipeline'
+            ls -al
       - run:
           name: git checking
           command: |
@@ -37,11 +50,10 @@ jobs:
       - image: 'cimg/go:1.17.2'
     working_directory: ~/go/src/github.com/ert4web/circle-test
     steps:
-      - run: mkdir tdir
-      - run: echo "hello" > tdir/test1
+      - run: echo "hello" > test1
       - persist_to_workspace:
       # must be relative or absolute path from working directory
-          root: tdir
+          root: .
 
           # must be relative path from root
           paths:
@@ -52,14 +64,14 @@ jobs:
     working_directory: ~/go/src/github.com/ert4web/circle-test
     steps:
       - attach_workspace:
-          at: ~/go/src/github.com/ert4web/circle-test/tdir
-      - run: cat ~/go/src/github.com/ert4web/circle-test/tdir/test1
+          at: ~/go/src/github.com/ert4web/circle-test
+      - run: cat ~/go/src/github.com/ert4web/circle-test/test1
       - run: pwd; ls -al
 workflows:
   version: 2
   Example_Workflow:
     jobs:
-      - job-3
-      - job-4:
+      - checkout-code
+      - job:
           requires:
-            - job-3
+            - checkout-code
